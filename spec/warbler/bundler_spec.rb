@@ -82,6 +82,17 @@ describe Warbler::Jar, "with Bundler" do
         `java -jar foo.war -S rake -T`
         $?.exitstatus.should == 0
       end
+
+      it "can run commands in the generated warfile with gem home overridden" do
+        use_config do |config|
+          config.features = %w{executable}
+          config.override_gem_home = true
+        end
+        jar.apply(config)
+        jar.create('foobar.war')
+        `java -jar foobar.war -S rake -T`
+        $?.exitstatus.should == 0
+      end
     end
 
     it "bundles only the gemspec for :git entries that are excluded" do
